@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo de Luta</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #111; color: white; font-family: sans-serif; }
+    canvas { background: #333; display: block; margin: auto; }
+    #controls { position: absolute; bottom: 20px; width: 100%; text-align: center; }
+    .btn { background: #444; color: white; border: none; padding: 10px 20px; margin: 5px; font-size: 16px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="600" height="400"></canvas>
+  <div id="controls">
+    <button class="btn" onclick="move('left')">←</button>
+    <button class="btn" onclick="move('right')">→</button>
+    <button class="btn" onclick="attack()">Socar</button>
+  </div>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let player = { x: 100, y: 300, width: 50, height: 100, color: 'blue', attacking: false };
+    let enemy = { x: 400, y: 300, width: 50, height: 100, color: 'red', health: 3 };
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      ctx.fillStyle = enemy.color;
+      ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+
+      ctx.fillStyle = 'white';
+      ctx.fillText('Vida do inimigo: ' + enemy.health, 10, 20);
+    }
+
+    function move(direction) {
+      if (direction === 'left') player.x -= 20;
+      if (direction === 'right') player.x += 20;
+      draw();
+    }
+
+    function attack() {
+      player.attacking = true;
+      if (
+        player.x + player.width > enemy.x &&
+        player.x < enemy.x + enemy.width
+      ) {
+        enemy.health--;
+        if (enemy.health <= 0) {
+          alert('Você venceu!');
+          reset();
+        }
+      }
+      draw();
+    }
+
+    function reset() {
+      player.x = 100;
+      enemy.x = 400;
+      enemy.health = 3;
+      draw();
+    }
+
+    draw();
+  </script>
+</body>
+</html>
